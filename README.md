@@ -92,3 +92,8 @@ service 2 ကပဲ service 1 ကို web hook နဲ့ ပြန်ပြေ
 သင်ယူဖို့
 how things work ကို သင်ယူဖို့။
 
+
+
+1. API to API ( Long Polling ပုံစံ)
+2. Webhook ( ဒါကတော့ callback ပြန်ခေါ်ပေးတာ)
+3. RabbitMQ RPC Pattern 
