@@ -1,6 +1,9 @@
 {
   "name": "service-2",
   "main": "index.js",
+  "scripts": {
+    "dev": "npx nodemon -L index.js"
+  },
   "dependencies": {
     "@hono/node-server": "^1.4.0",
     "amqplib": "^0.10.3",

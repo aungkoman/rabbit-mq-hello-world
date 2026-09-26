@@ -41,6 +41,10 @@ app.get('/add-person/:name', (req, res) => {
         res.status(500).send("RabbitMQ not connected yet.");
     }
 });
+app.get('/', (req, res) => { 
+    res.send(`Service 1 (Publisher) is up and running name is {req.params.name} , welcome`);
+     
+});
 
 app.listen(PORT, () => {
     console.log(`Service 1 (Publisher) running on port ${PORT}`);

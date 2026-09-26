@@ -5,14 +5,17 @@ services:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq-server
     ports:
-      - "5672:5672"   # Default RabbitMQ port
-      - "15672:15672" # Management UI port (Browser ကနေ ဝင်ကြည့်လို့ရမယ့် port)
+      - "5672:5672"
+      - "15672:15672"
 
   service-1:
     build: ./service-1-publisher
     container_name: service-1-express
     ports:
       - "3001:3001"
+    volumes:
+      - ./service-1-publisher:/app
+      - /app/node_modules
     depends_on:
       - rabbitmq
 
@@ -21,6 +24,9 @@ services:
     container_name: service-2-hono
     ports:
       - "3002:3002"
+    volumes:
+      - ./service-2-hono:/app
+      - /app/node_modules
     depends_on:
       - rabbitmq
 
@@ -29,5 +35,8 @@ services:
     container_name: service-3-express
     ports:
       - "3003:3003"
+    volumes:
+      - ./service-3-express:/app
+      - /app/node_modules
     depends_on:
       - rabbitmq
