@@ -28,3 +28,20 @@ Service 3 - Hono
 All Deployed via Docker.
 
 let's start.
+
+--
+
+For quick setup,
+let's use expres and hono
+
+```bash
+docker-compose up --build
+```
+
+let's test the api
+
+```bash
+http://localhost:3001/add-person/AungKo
+```
+
+

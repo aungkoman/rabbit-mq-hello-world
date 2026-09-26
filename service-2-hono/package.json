@@ -1,0 +1,9 @@
+{
+  "name": "service-2",
+  "main": "index.js",
+  "dependencies": {
+    "@hono/node-server": "^1.4.0",
+    "amqplib": "^0.10.3",
+    "hono": "^4.0.0"
+  }
+}
