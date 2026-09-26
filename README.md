@@ -97,3 +97,57 @@ how things work ကို သင်ယူဖို့။
 1. API to API ( Long Polling ပုံစံ)
 2. Webhook ( ဒါကတော့ callback ပြန်ခေါ်ပေးတာ)
 3. RabbitMQ RPC Pattern 
+
+
+မိုက်သွားပြီဟေ့။
+
+```bash
+http://localhost:3001/send-email/cisco@mail.com
+```
+
+```json
+
+{
+    "message": "Email request accepted and is processing in background.",
+    "jobId": "7bd6d8a9-3568-4774-94f7-e5cf2267ada9",
+    "trackUrl": "http://localhost:3001/track/7bd6d8a9-3568-4774-94f7-e5cf2267ada9"
+}
+
+```
+
+```bash
+http://localhost:3001/track/7bd6d8a9-3568-4774-94f7-e5cf2267ada9
+```
+
+```json
+
+{
+    "jobId": "7bd6d8a9-3568-4774-94f7-e5cf2267ada9",
+    "data": {
+        "status": "PENDING",
+        "details": null
+    }
+}
+```
+
+
+```bash
+http://localhost:3001/track/7bd6d8a9-3568-4774-94f7-e5cf2267ada9
+```
+
+```json
+
+{
+    "jobId": "7bd6d8a9-3568-4774-94f7-e5cf2267ada9",
+    "data": {
+        "status": "COMPLETED",
+        "details": {
+            "target": "cisco@mail.com",
+            "status": "DELIVERED",
+            "reason": "Sent successfully to Mail server",
+            "timestamp": "2026-09-26T15:14:09.404Z"
+        }
+    }
+}
+```
+
