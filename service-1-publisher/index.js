@@ -42,8 +42,7 @@ app.get('/add-person/:name', (req, res) => {
     }
 });
 app.get('/', (req, res) => { 
-    res.send(`Service 1 (Publisher) is up and running name is {req.params.name} , welcome`);
-     
+    res.send(`Service 1 (Publisher) is up and running name is ${req.query.name || "You Know WHO"} , welcome`);
 });
 
 app.listen(PORT, () => {
