@@ -31,6 +31,9 @@ dotnet watch run
 # git ignore file ရဖို့
 dotnet new gitignore
 
+# In Memory db ထည့်မယ်။
+dotnet add package Microsoft.EntityFrameworkCore.InMemory
+
 
 http://localhost:5238/WeatherForecast 
 ဒီကို သွားကြည့်ရင်
