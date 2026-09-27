@@ -39,6 +39,10 @@ http://localhost:5238/WeatherForecast
 ဒီကို သွားကြည့်ရင်
 JSON ရပါမယ်။
 
+
+Swagger ?
+where is swagger?
+
 [
 {
 "date": "2026-09-28",
