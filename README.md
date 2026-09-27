@@ -5,6 +5,110 @@
 - [ ] Express / Hono
 
 
+## 2026-09-27 - C# dot net
+
+service 4 ကို dot net core နဲ့ ရေးမယ်။
+
+ရိုးရိုး CRUD API Endpoint ပဲ ထုတ်ပေး။
+
+person
+phone
+email
+address
+descritpion
+
+ဒီလောက်ဆို ရပြီ။
+
+```bash
+mkdir service-4-dotnet
+cd service-4-dotnet
+dotnet new webapi --use-controllers
+dotnet run
+# hot reload ရအောင်လို့။
+
+dotnet watch run
+
+# git ignore file ရဖို့
+dotnet new gitignore
+
+
+http://localhost:5238/WeatherForecast 
+ဒီကို သွားကြည့်ရင်
+JSON ရပါမယ်။
+
+[
+{
+"date": "2026-09-28",
+"temperatureC": 46,
+"temperatureF": 114,
+"summary": "Balmy"
+},
+{
+"date": "2026-09-29",
+"temperatureC": -8,
+"temperatureF": 18,
+"summary": "Balmy"
+},
+{
+"date": "2026-09-30",
+"temperatureC": 35,
+"temperatureF": 94,
+"summary": "Scorching"
+},
+{
+"date": "2026-10-01",
+"temperatureC": 15,
+"temperatureF": 58,
+"summary": "Balmy"
+},
+{
+"date": "2026-10-02",
+"temperatureC": 33,
+"temperatureF": 91,
+"summary": "Sweltering"
+}
+]
+
+
+
+
+PS D:\Cisco\Code\RabbitMQ\service-4-dotnet> dotnet --version
+The command could not be loaded, possibly because:
+  * You intended to execute a .NET application:
+      The application '--version' does not exist.
+  * You intended to execute a .NET SDK command:
+      No .NET SDKs were found.
+
+Download a .NET SDK:
+https://aka.ms/dotnet/download
+
+Learn about SDK resolution:
+https://aka.ms/dotnet/sdk-not-found
+
+
+```
+
+
+dotnet က ထည့်ကို မထားရသေးတာ။
+အရင်က ထည့်ထားတာ ဘယ်ရောက်သွားလဲမသိ။
+Uninstall လုပ်တာ လက်လွန်သွားတာ ဖြစ်မယ်။
+
+
+https://dotnet.microsoft.com/en-us/download/dotnet/
+
+ဒီမှာ ပြန်သွားဒေါင်း။
+.NET 10.0 SDK တဲ့။
+dotnet-sdk-10.0.401-win-x64.exe
+
+200 MB လောက်ရှိတယ်။
+
+
+PS D:\Cisco\Code\RabbitMQ> dotnet --version
+10.0.401
+
+အဆင်ပြေသွားပြီ။
+
+## 2026-09-26 Sat - Hello World
 ဘာစနစ်လုပ်မလဲ?
 
 User Management
