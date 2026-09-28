@@ -9,6 +9,9 @@ public class MainApiController : ControllerBase
     [HttpGet(Name = "HelloWorld")]
     public IEnumerable<object> Get()
     {
-        return ["API is up and running..."];
+        return [
+            "API is up and running...",
+            "What is this life if full of care?"
+            ];
     }
 }

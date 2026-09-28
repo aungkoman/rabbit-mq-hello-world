@@ -46,3 +46,7 @@ services:
     container_name: service-4-dotnet
     ports:
       - "3004:8080" # Local Port 3004 ကို Container ရဲ့ 8080 သို့ ချိတ်ဆက်ပါမည်
+    volumes:
+      - ./service-4-dotnet:/app  # Local folder နဲ့ Container ကို ချိတ်ဆက်ခြင်း
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1 # Docker တွင် Hot Reload အလုပ်လုပ်ရန် မဖြစ်မနေ လိုအပ်သည်

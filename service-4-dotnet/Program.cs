@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using service_4_dotnet.Data;
+using service_4_dotnet.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("PersonList"));
+
+// RabbitMQ Subscriber ကို Background Task အနေဖြင့် ထည့်သွင်းခြင်း
+builder.Services.AddHostedService<RabbitMqSubscriberService>();
+
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

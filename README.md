@@ -8,8 +8,21 @@
 
 ## 2026-09-28 Monday - C# , Docker and Rabbit MQ
 
+
+- [ ] Swagger မမြင်ရသေးပါ။
+
 ```bash
 docker-compose up --build -d
+
+
+dotnet add package RabbitMQ.Client --version 6.8.1
+
+
+docker-compose down
+docker-compose up --build -d
+
+
+
 ```
 
 
