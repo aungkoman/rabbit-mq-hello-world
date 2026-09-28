@@ -9,6 +9,18 @@
 ## 2026-09-28 Monday - C# , Docker and Rabbit MQ
 
 
+
+So the point is 
+
+build image,
+zip
+upload 
+restore / load
+run
+
+that's all
+
+
 - [ ] Swagger မမြင်ရသေးပါ။
 
 ```bash
@@ -32,6 +44,7 @@ docker save -o my-microservices.tar rabbitmq:3-management-alpine myapp-service-1
 
 scp my-microservices.tar docker-compose.prod.yml user@server_ip:~/deploy/
 scp my-microservices.tar docker-compose.prod.yml ubuntu@35.154.184.88:~/deploy/
+scp docker-compose.prod.yml ubuntu@35.154.184.88:~/deploy/
 
 ssh ubuntu@35.154.184.88
 
@@ -57,7 +70,7 @@ scp service-4-update.tar ubuntu@35.154.184.88:~/deploy/
 cd ~/deploy
 docker load -i service-4-update.tar
 docker compose -f docker-compose.prod.yml up -d
-
+docker compose -f docker-compose.prod.yml up -d --build service-4
 
 cd /etc/nginx/sites-available/
 sudo nginx -t
@@ -65,6 +78,8 @@ sudo systemctl reload nginx
 
 
 curl -I http://127.0.0.1:5504
+curl -I http://127.0.0.1:8080
+curl -I http://127.0.0.1:5238
 
 
 ```
