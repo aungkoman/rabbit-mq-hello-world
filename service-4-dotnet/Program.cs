@@ -12,6 +12,9 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("Pers
 // RabbitMQ Subscriber ကို Background Task အနေဖြင့် ထည့်သွင်းခြင်း
 builder.Services.AddHostedService<RabbitMqSubscriberService>();
 
+// 🌟 ယခုအသစ်ထည့်လိုက်သော Prefetch(1) Work Queue Worker
+builder.Services.AddHostedService<RabbitMqWorkerService>();
+
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
