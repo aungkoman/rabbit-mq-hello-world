@@ -22,8 +22,75 @@ docker-compose down
 docker-compose up --build -d
 
 
+docker pull rabbitmq:3-management-alpine
+docker build -t myapp-service-1:latest ./service-1-publisher
+docker build -t myapp-service-2:latest ./service-2-hono
+docker build -t myapp-service-3:latest ./service-3-express
+docker build -t myapp-service-4:latest ./service-4-dotnet
+
+docker save -o my-microservices.tar rabbitmq:3-management-alpine myapp-service-1:latest myapp-service-2:latest myapp-service-3:latest myapp-service-4:latest
+
+scp my-microservices.tar docker-compose.prod.yml user@server_ip:~/deploy/
+scp my-microservices.tar docker-compose.prod.yml ubuntu@35.154.184.88:~/deploy/
+
+ssh ubuntu@35.154.184.88
+
+ssh user@server_ip
+cd ~/deploy
+docker load -i my-microservices.tar
+
+docker compose -f docker-compose.prod.yml up -d
+
+directory can't see, what 
+
+docker ps
+
+
+docker ps -a | grep service-4-dotnet
+
+
+docker build -t myapp-service-4:latest ./service-4-dotnet
+docker save -o service-4-update.tar myapp-service-4:latest
+
+scp service-4-update.tar ubuntu@35.154.184.88:~/deploy/
+
+cd ~/deploy
+docker load -i service-4-update.tar
+docker compose -f docker-compose.prod.yml up -d
+
+
+cd /etc/nginx/sites-available/
+sudo nginx -t
+sudo systemctl reload nginx
+
+
+curl -I http://127.0.0.1:5504
+
 
 ```
+
+
+
+```bash
+# 2. Proxy requests from /api-one to localhost:5501
+    location /api-one/ {
+        # The trailing slash here strips "/api-one/" before sending to the backend.
+        # If your Node/backend app explicitly expects the "/api-one" prefix in its routes,
+        # remove the trailing slash: proxy_pass http://127.0.0.1:5501;
+        proxy_pass http://127.0.0.1:5501/;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    ```
+
 
 
 Internet ရှိမှ Docker က run လို့ ရတာလား?

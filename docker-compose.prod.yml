@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq-server
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  service-1:
+    image: myapp-service-1:latest
+    container_name: service-1-express
+    ports:
+      - "5501:5501"
+    depends_on:
+      - rabbitmq
+
+  service-2:
+    image: myapp-service-2:latest
+    container_name: service-2-hono
+    ports:
+      - "5502:5502"
+    depends_on:
+      - rabbitmq
+
+  service-3:
+    image: myapp-service-3:latest
+    container_name: service-3-express
+    ports:
+      - "5503:5503"
+    depends_on:
+      - rabbitmq
+  
+  service-4:
+    image: myapp-service-4:latest
+    container_name: service-4-dotnet
+    ports:
+      - "5504:5504"
+    environment:
+      # launchSettings ကို ကျော်ပြီး 5504 ကိုသာ သုံးရန်
+      - ASPNETCORE_URLS=http://+:5504 
+      - DOTNET_USE_POLLING_FILE_WATCHER=true
+    # Dockerfile ထဲက ENTRYPOINT ကို ကျော်ပြီး ဤ Command ကိုသာ Run ရန်
+    command: ["dotnet", "watch", "run", "--no-launch-profile", "--urls", "http://0.0.0.0:5504"]
+    depends_on:
+      - rabbitmq
