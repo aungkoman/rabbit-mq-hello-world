@@ -40,3 +40,9 @@ services:
       - /app/node_modules
     depends_on:
       - rabbitmq
+  
+  service-4:
+    build: ./service-4-dotnet
+    container_name: service-4-dotnet
+    ports:
+      - "3004:8080" # Local Port 3004 ကို Container ရဲ့ 8080 သို့ ချိတ်ဆက်ပါမည်

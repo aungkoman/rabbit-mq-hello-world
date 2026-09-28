@@ -5,6 +5,14 @@
 - [ ] Express / Hono
 
 
+
+## 2026-09-28 Monday - C# , Docker and Rabbit MQ
+
+```bash
+docker-compose up --build -d
+```
+
+
 ## 2026-09-27 - C# dot net
 
 service 4 ကို dot net core နဲ့ ရေးမယ်။
