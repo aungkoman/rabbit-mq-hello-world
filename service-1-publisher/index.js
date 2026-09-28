@@ -3,7 +3,7 @@ const amqp = require('amqplib');
 const crypto = require('crypto'); // Job ID ဖန်တီးရန်
 
 const app = express();
-const PORT = 3001;
+const PORT = 5501;
 
 // Event နာမည်တွေ။
 const EXCHANGE_NAME = 'person_events';

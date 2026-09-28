@@ -5,6 +5,7 @@ const amqp = require('amqplib');
 const app = new Hono();
 const EXCHANGE_NAME = 'person_events';
 const EMAIL_QUEUE = 'email_service_queue';
+const PORT = 5502;
 
 
 async function connectRabbitMQ() {
@@ -87,7 +88,7 @@ app.get('/', (c) => c.text('Service 2 (Hono) is running and listening to RabbitM
 
 serve({
   fetch: app.fetch,
-  port: 3002
+  port: PORT
 }, (info) => {
   console.log(`Service 2 running on port ${info.port}`);
 });

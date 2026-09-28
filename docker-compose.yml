@@ -12,7 +12,7 @@ services:
     build: ./service-1-publisher
     container_name: service-1-express
     ports:
-      - "3001:3001"
+      - "5501:5501"
     volumes:
       - ./service-1-publisher:/app
       - /app/node_modules
@@ -23,7 +23,7 @@ services:
     build: ./service-2-hono
     container_name: service-2-hono
     ports:
-      - "3002:3002"
+      - "5502:5502"
     volumes:
       - ./service-2-hono:/app
       - /app/node_modules
@@ -34,7 +34,7 @@ services:
     build: ./service-3-express
     container_name: service-3-express
     ports:
-      - "3003:3003"
+      - "5503:5503"
     volumes:
       - ./service-3-express:/app
       - /app/node_modules
@@ -45,7 +45,7 @@ services:
     build: ./service-4-dotnet
     container_name: service-4-dotnet
     ports:
-      - "3004:8080" # Local Port 3004 ကို Container ရဲ့ 8080 သို့ ချိတ်ဆက်ပါမည်
+      - "5504:5504" # Local Port 5504 ကို Container ရဲ့ 5504 သို့ ချိတ်ဆက်ပါမည်
     volumes:
       - ./service-4-dotnet:/app  # Local folder နဲ့ Container ကို ချိတ်ဆက်ခြင်း
     environment:

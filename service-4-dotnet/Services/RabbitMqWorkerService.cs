@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json; // Make sure to add this for JSON serialization
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -22,7 +23,7 @@ public class RabbitMqWorkerService : BackgroundService
         _channel = _connection.CreateModel();
 
         // Queue တည်ဆောက်ခြင်း (durable: true ထားခြင်းဖြင့် Server restart ကျလည်း Queue မပျောက်ပါ)
-        _channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+        _channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
         // 🌟 အရေးကြီးဆုံးအချက်: တစ်ကြိမ်လျှင် Message တစ်ခုသာ ယူရန် သတ်မှတ်ခြင်း (Prefetch 1)
         _channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
@@ -38,8 +39,28 @@ public class RabbitMqWorkerService : BackgroundService
             {
                 // အလုပ်လုပ်နေကြောင်း Simulate လုပ်ရန် ၂ စက္ကန့် စောင့်ခိုင်းထားပါသည်
                 await Task.Delay(2000);
-                
+
                 Console.WriteLine($"[Service 4 - Worker] ✅ Task လုပ်ဆောင်ပြီးစီးပါပြီ!");
+
+                // should reply to, callback queue
+                var responsePayload = new
+                {
+                    target = "target@mail.com", // Ideally parsed from the incoming 'message'
+                    status = "DELIVERED",
+                    reason = "Sent successfully from .NET worker",
+                    timestamp = DateTime.UtcNow
+                };
+
+                var responseBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(responsePayload));
+
+                // 3. Publish the response to the ReplyTo queue
+                // Use the default exchange ("") and the ReplyTo queue name as the routing key
+                // _channel.BasicPublish(
+                //     exchange: "",
+                //     routingKey: props.ReplyTo,
+                //     basicProperties: replyProps,
+                //     body: responseBytes);
+
 
                 // 🌟 အလုပ်ပြီးဆုံးကြောင်း RabbitMQ သို့ Manual အကြောင်းပြန်ခြင်း (Ack)
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);

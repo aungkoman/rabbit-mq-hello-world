@@ -2,7 +2,7 @@ const express = require('express');
 const amqp = require('amqplib');
 
 const app = express();
-const PORT = 3003;
+const PORT = 5503;
 const EXCHANGE_NAME = 'person_events';
 
 async function connectRabbitMQ() {
