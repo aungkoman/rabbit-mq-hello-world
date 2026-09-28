@@ -21,6 +21,15 @@ run
 that's all
 
 
+### Deploy on Docker Hub
+
+```bash
+docker login
+
+```
+
+
+
 - [ ] Swagger မမြင်ရသေးပါ။
 
 ```bash
