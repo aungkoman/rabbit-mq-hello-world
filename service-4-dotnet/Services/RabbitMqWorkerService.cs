@@ -33,14 +33,16 @@ public class RabbitMqWorkerService : BackgroundService
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
-            Console.WriteLine($"[Service 4 - Worker] ⏳ ဝင်လာသော Task အား စတင်လုပ်ဆောင်နေပါသည်: {message}");
+            var props = ea.BasicProperties;
+            
+            Console.WriteLine($"[Service 4 - Worker] ⏳ incoming processing task: {message}");
 
             try
             {
                 // အလုပ်လုပ်နေကြောင်း Simulate လုပ်ရန် ၂ စက္ကန့် စောင့်ခိုင်းထားပါသည်
                 await Task.Delay(2000);
 
-                Console.WriteLine($"[Service 4 - Worker] ✅ Task လုပ်ဆောင်ပြီးစီးပါပြီ!");
+                Console.WriteLine($"[Service 4 - Worker] ✅ Task processed.");
 
                 // should reply to, callback queue
                 var responsePayload = new
@@ -52,6 +54,21 @@ public class RabbitMqWorkerService : BackgroundService
                 };
 
                 var responseBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(responsePayload));
+
+                Console.WriteLine($"[Service 4 - Worker] Replied JobID: {props.CorrelationId} - Status: DELIVERED");
+
+
+                var replyTo = ea.BasicProperties.ReplyTo;
+                var correlationId = ea.BasicProperties.CorrelationId;
+
+                // _channel.BasicPublish(
+                //     exchange: "",
+                //     routingKey: replyTo,
+                //     basicProperties: replyProps,
+                //     body: responseBytes
+                // );
+
+
 
                 // 3. Publish the response to the ReplyTo queue
                 // Use the default exchange ("") and the ReplyTo queue name as the routing key
