@@ -26,6 +26,32 @@ docker-compose up --build -d
 ```
 
 
+Internet ရှိမှ Docker က run လို့ ရတာလား?
+
+```bash
+ > [service-1 internal] load metadata for docker.io/library/node:18-alpine:
+------
+------
+ > [service-4 internal] load metadata for mcr.microsoft.com/dotnet/sdk:10.0:
+------
+Dockerfile:1
+
+--------------------
+
+   1 | >>> FROM node:18-alpine
+
+   2 |     WORKDIR /app
+
+   3 |     COPY package*.json ./
+
+--------------------
+
+target service-2: failed to solve: node:18-alpine: failed to resolve source metadata for docker.io/library/node:18-alpine: failed to do request: Head "https://registry-1.docker.io/v2/library/node/manifests/18-alpine": dialing registry-1.docker.io:443 container via direct connection because static system has no HTTPS proxy: connecting to registry-1.docker.io:443: dial tcp: lookup registry-1.docker.io: no such host
+
+PS D:\Cisco\Code\RabbitMQ> 
+```
+
+
 ## 2026-09-27 - C# dot net
 
 service 4 ကို dot net core နဲ့ ရေးမယ်။
