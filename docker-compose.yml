@@ -68,7 +68,9 @@ services:
       - /var/www/html/bootstrap/cache # Don't mount cache from Windows
       - ./service-5-laravel/docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - laravel
+      laravel:
+        aliases:
+          - app
     depends_on:
       service-5-mysql:
         condition: service_healthy
