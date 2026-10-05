@@ -31,7 +31,7 @@ services:
       - "5503:5503"
     depends_on:
       - rabbitmq
-  
+
   service-4:
     image: myapp-service-4:latest
     container_name: service-4-dotnet
@@ -39,9 +39,108 @@ services:
       - "5504:5504"
     environment:
       # launchSettings ကို ကျော်ပြီး 5504 ကိုသာ သုံးရန်
-      - ASPNETCORE_URLS=http://+:5504 
+      - ASPNETCORE_URLS=http://+:5504
       - DOTNET_USE_POLLING_FILE_WATCHER=true
     # Dockerfile ထဲက ENTRYPOINT ကို ကျော်ပြီး ဤ Command ကိုသာ Run ရန်
     command: ["dotnet", "watch", "run", "--no-launch-profile", "--urls", "http://0.0.0.0:5504"]
     depends_on:
       - rabbitmq
+
+  # ── Service 5 – Laravel ──────────────────────────────────────────────────────
+
+  service-5-app:
+    image: myapp-service-5-app:latest
+    container_name: laravel-app
+    restart: unless-stopped
+    expose:
+      - "9000"
+    working_dir: /var/www/html
+    networks:
+      laravel:
+        aliases:
+          - app
+    depends_on:
+      service-5-mysql:
+        condition: service_healthy
+      service-5-redis:
+        condition: service_started
+
+  service-5-nginx:
+    image: myapp-service-5-nginx:latest
+    container_name: laravel-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    networks:
+      - laravel
+    depends_on:
+      - service-5-app
+
+  service-5-mysql:
+    image: mysql:8.0
+    container_name: laravel-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+      SERVICE_TAGS: prod
+      SERVICE_NAME: mysql
+    volumes:
+      - s5_mysql_data:/var/lib/mysql
+    networks:
+      - laravel
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  service-5-redis:
+    image: redis:alpine
+    container_name: laravel-redis
+    restart: unless-stopped
+    volumes:
+      - s5_redis_data:/data
+    networks:
+      - laravel
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  service-5-queue:
+    image: myapp-service-5-app:latest
+    container_name: laravel-queue
+    restart: unless-stopped
+    working_dir: /var/www/html
+    networks:
+      - laravel
+    depends_on:
+      service-5-mysql:
+        condition: service_healthy
+    command: php artisan queue:work database --tries=3 --timeout=90
+
+  service-5-scheduler:
+    image: myapp-service-5-app:latest
+    container_name: laravel-scheduler
+    restart: unless-stopped
+    working_dir: /var/www/html
+    networks:
+      - laravel
+    depends_on:
+      service-5-mysql:
+        condition: service_healthy
+      service-5-redis:
+        condition: service_started
+    command: php artisan schedule:work
+
+networks:
+  laravel:
+    driver: bridge
+
+volumes:
+  s5_mysql_data:
+  s5_redis_data:
