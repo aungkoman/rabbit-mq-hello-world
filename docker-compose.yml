@@ -40,7 +40,7 @@ services:
       - /app/node_modules
     depends_on:
       - rabbitmq
-  
+
   service-4:
     build: ./service-4-dotnet
     container_name: service-4-dotnet
@@ -50,3 +50,132 @@ services:
       - ./service-4-dotnet:/app  # Local folder နဲ့ Container ကို ချိတ်ဆက်ခြင်း
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=1 # Docker တွင် Hot Reload အလုပ်လုပ်ရန် မဖြစ်မနေ လိုအပ်သည်
+
+  # ── Service 5 – Laravel ──────────────────────────────────────────────────────
+
+  service-5-app:
+    build:
+      context: ./service-5-laravel
+      dockerfile: ./docker/php/Dockerfile
+    container_name: laravel-app
+    restart: unless-stopped
+    expose:
+      - "9000"
+    working_dir: /var/www/html
+    volumes:
+      - ./service-5-laravel:/var/www/html
+      - /var/www/html/storage         # Don't mount storage from Windows
+      - /var/www/html/bootstrap/cache # Don't mount cache from Windows
+      - ./service-5-laravel/docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - laravel
+    depends_on:
+      service-5-mysql:
+        condition: service_healthy
+      service-5-redis:
+        condition: service_started
+
+  service-5-nginx:
+    image: nginx:alpine
+    container_name: laravel-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./service-5-laravel:/var/www/html
+      - ./service-5-laravel/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - laravel
+    depends_on:
+      - service-5-app
+
+  service-5-mysql:
+    image: mysql:8.0
+    container_name: laravel-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - s5_mysql_data:/var/lib/mysql
+    networks:
+      - laravel
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  service-5-redis:
+    image: redis:alpine
+    container_name: laravel-redis
+    restart: unless-stopped
+    volumes:
+      - s5_redis_data:/data
+    networks:
+      - laravel
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  service-5-node:
+    image: node:22-alpine
+    container_name: laravel-node
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./service-5-laravel:/var/www/html
+      - s5_node_modules:/var/www/html/node_modules
+    networks:
+      - laravel
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+
+  # Temporarily disabled to isolate web app issue
+  # service-5-queue:
+  #   build:
+  #     context: ./service-5-laravel
+  #     dockerfile: ./docker/php/Dockerfile
+  #   container_name: laravel-queue
+  #   restart: unless-stopped
+  #   working_dir: /var/www/html
+  #   volumes:
+  #     - ./service-5-laravel:/var/www/html
+  #   networks:
+  #     - laravel
+  #   depends_on:
+  #     service-5-mysql:
+  #       condition: service_healthy
+  #   command: php artisan queue:work database --tries=3 --timeout=90
+
+  # service-5-scheduler:
+  #   build:
+  #     context: ./service-5-laravel
+  #     dockerfile: ./docker/php/Dockerfile
+  #   container_name: laravel-scheduler
+  #   restart: unless-stopped
+  #   working_dir: /var/www/html
+  #   volumes:
+  #     - ./service-5-laravel:/var/www/html
+  #   networks:
+  #     - laravel
+  #   depends_on:
+  #     service-5-mysql:
+  #       condition: service_healthy
+  #     service-5-redis:
+  #       condition: service_started
+  #   command: php artisan schedule:work
+
+networks:
+  laravel:
+    driver: bridge
+
+volumes:
+  s5_mysql_data:
+  s5_redis_data:
+  s5_node_modules:

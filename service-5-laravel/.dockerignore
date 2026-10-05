@@ -1,0 +1,17 @@
+.git
+.github
+.gitignore
+README.md
+.env
+.env.backup
+node_modules
+npm-debug.log
+yarn-error.log
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+public/build
+public/hot
+
+
